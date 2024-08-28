@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Landing Page</title>
+    <link rel="stylesheet" href="token.css">
+</head>
+<body>
+  <form id="booking-form" action="token.php" method="post">
+    
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">AGRIS</div>
+            <ul class="nav-links">
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="book-appointment-btn" onclick="openBookingModal()">Book Your Appointment</button>
+        </nav>
+    </header>
+
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome To Agris Booking</h1>
+            <p> The Changing World  </p>
+            <button onclick="openBookingModal()">Book Your Appointment</button>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBookingModal()">&times;</span>
+            <h2>Book an Appointment</h2>
+            <form id="booking-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="token.js"></script>
+    <script src="token2.js"></script>
+    <script>
+      const form = document.querySelector('form');
+    
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        fetch('/generate-token', {
+          method: 'POST',
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const token = data.token;
+            fetch('/submit', {
+              method: 'POST',
+              headers: {
+                'x-token': token,
+              },
+              body: new FormData(form),
+            })
+              .then((res) => res.text())
+              .then((message) => console.log(message))
+              .catch((error) => console.error(error));
+          })
+          .catch((error) => console.error(error));
+      });
+    </script>
+    
+    
+</body>
+</html>
